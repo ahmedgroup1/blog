@@ -1,0 +1,5 @@
+ahmed_blog:
+    resource: "@AhmedBlogBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
