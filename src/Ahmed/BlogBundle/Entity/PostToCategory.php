@@ -26,74 +26,45 @@ class PostToCategory
      */
     private $category;
 
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="post_id", type="integer")
-     */
-    private $postId;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="category_id", type="integer")
-     */
-    private $categoryId;
-
-
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set postId
-     *
-     * @param integer $postId
-     * @return PostToCategory
-     */
-    public function setPostId($postId)
-    {
-        $this->postId = $postId;
+   
     
-        return $this;
+     /**
+     * Get post
+     *
+     * @return post
+     */
+    public function getPost()
+    {
+        return $this->post;
     }
 
     /**
-     * Get postId
+     * Set post
      *
-     * @return integer 
+     * @param post $post
      */
-    public function getPostId()
+    public function setPost($post)
     {
-        return $this->postId;
+        $this->post = $post;
     }
 
     /**
-     * Set categoryId
+     * Get category
      *
-     * @param integer $categoryId
-     * @return PostToCategory
+     * @return Category
      */
-    public function setCategoryId($categoryId)
+    public function getCategory()
     {
-        $this->categoryId = $categoryId;
-    
-        return $this;
+        return $this->category;
     }
 
     /**
-     * Get categoryId
+     * Set category
      *
-     * @return integer 
+     * @param Category $category
      */
-    public function getCategoryId()
+    public function setCategory($category)
     {
-        return $this->categoryId;
+        $this->category = $category;
     }
 }

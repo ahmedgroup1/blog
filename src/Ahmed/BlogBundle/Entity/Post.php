@@ -3,6 +3,7 @@
 namespace Ahmed\BlogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Post
@@ -10,14 +11,15 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Ahmed\BlogBundle\Entity\PostRepository")
  */
-class Post
-{
-     /**
-     * @ORM\OneToMany(targetEntity="PostToCategory", mappedBy="course")
+class Post {
+
+    /**
+     * @ORM\OneToMany(targetEntity="PostToCategory", mappedBy="post")
      * @ORM\OrderBy({"ordering" = "ASC"})
      */
     private $postToCategories;
-    
+    private $categories;
+
     /**
      * @var integer
      *
@@ -62,14 +64,12 @@ class Post
      */
     private $author;
 
-
     /**
      * Get id
      *
      * @return integer 
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -79,10 +79,9 @@ class Post
      * @param string $title
      * @return Post
      */
-    public function setTitle($title)
-    {
+    public function setTitle($title) {
         $this->title = $title;
-    
+
         return $this;
     }
 
@@ -91,8 +90,7 @@ class Post
      *
      * @return string 
      */
-    public function getTitle()
-    {
+    public function getTitle() {
         return $this->title;
     }
 
@@ -102,10 +100,9 @@ class Post
      * @param string $content
      * @return Post
      */
-    public function setContent($content)
-    {
+    public function setContent($content) {
         $this->content = $content;
-    
+
         return $this;
     }
 
@@ -114,8 +111,7 @@ class Post
      *
      * @return string 
      */
-    public function getContent()
-    {
+    public function getContent() {
         return $this->content;
     }
 
@@ -125,10 +121,9 @@ class Post
      * @param \DateTime $dateCreated
      * @return Post
      */
-    public function setDateCreated($dateCreated)
-    {
+    public function setDateCreated($dateCreated) {
         $this->dateCreated = $dateCreated;
-    
+
         return $this;
     }
 
@@ -137,8 +132,7 @@ class Post
      *
      * @return \DateTime 
      */
-    public function getDateCreated()
-    {
+    public function getDateCreated() {
         return $this->dateCreated;
     }
 
@@ -148,10 +142,9 @@ class Post
      * @param \DateTime $dateUpdated
      * @return Post
      */
-    public function setDateUpdated($dateUpdated)
-    {
+    public function setDateUpdated($dateUpdated) {
         $this->dateUpdated = $dateUpdated;
-    
+
         return $this;
     }
 
@@ -160,8 +153,7 @@ class Post
      *
      * @return \DateTime 
      */
-    public function getDateUpdated()
-    {
+    public function getDateUpdated() {
         return $this->dateUpdated;
     }
 
@@ -171,10 +163,9 @@ class Post
      * @param integer $author
      * @return Post
      */
-    public function setAuthor($author)
-    {
+    public function setAuthor($author) {
         $this->author = $author;
-    
+
         return $this;
     }
 
@@ -183,8 +174,68 @@ class Post
      *
      * @return integer 
      */
-    public function getAuthor()
-    {
+    public function getAuthor() {
         return $this->author;
     }
+
+    /**
+     * Constructor
+     */
+    public function __construct() {
+        $this->postToCategories = new ArrayCollection();
+        $this->categories = new ArrayCollection();
+    }
+
+    /**
+     * Get courceToCategoies
+     *
+     * @return List<PostToCategory>
+     */
+    public function getPostToCategories() {
+        return $this->postToCategories;
+    }
+
+    /**
+     * Add postToCategories
+     *
+     * @param PostToCategory
+     */
+    public function addPostToCategories(PostToCategory $postToCategories) {
+        $postToCategories->setPost($this);
+        $this->postToCategories[] = $postToCategories;
+    }
+
+    /**
+     * Add postToCategories
+     *
+     * @param PostToCategory
+     */
+    
+    public function setPostToCategories(\Ahmed\BlogBundle\Entity\PostToCategory $postToCategories) {
+        $postToCategories->setPost($this);
+        $this->postToCategories[] = $postToCategories;
+        return $this;
+    }
+
+    /**
+     * Add postToCategories
+     *
+     * @param  \TA\CurriculumBundle\Entity\PostToCategory $postToCategories
+     * @return Post
+     */
+    public function addPostToCategory(PostToCategory $postToCategories) {
+        $this->postToCategories[] = $postToCategories;
+
+        return $this;
+    }
+
+    /**
+     * Remove postToCategories
+     *
+     * @param \TA\CurriculumBundle\Entity\PostToCategory $postToCategories
+     */
+    public function removePostToCategory(PostToCategory $postToCategories) {
+        $this->postToCategories->removeElement($postToCategories);
+    }
+
 }

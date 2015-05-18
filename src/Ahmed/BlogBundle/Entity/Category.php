@@ -3,6 +3,7 @@
 namespace Ahmed\BlogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Category
@@ -10,14 +11,13 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Ahmed\BlogBundle\Entity\CategoryRepository")
  */
-class Category
-{
-     /**
+class Category {
+
+    /**
      * @ORM\OneToMany(targetEntity="PostToCategory", mappedBy="category")
      */
     private $postToCategories;
 
-    
     /**
      * @var integer
      *
@@ -34,14 +34,12 @@ class Category
      */
     private $name;
 
-
     /**
      * Get id
      *
      * @return integer 
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -51,10 +49,9 @@ class Category
      * @param string $name
      * @return Category
      */
-    public function setName($name)
-    {
+    public function setName($name) {
         $this->name = $name;
-    
+
         return $this;
     }
 
@@ -63,8 +60,43 @@ class Category
      *
      * @return string 
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->name;
     }
+
+  
+
+    public function __construct() {
+        $this->postToCategories = new ArrayCollection();
+    }
+
+    public function getPostToCategories() {
+        return $this->postToCategories;
+    }
+
+    public function addPostToCategories($postToCategories) {
+        $this->postToCategories[] = $postToCategories;
+    }
+
+    /**
+     * Add postToCategories
+     *
+     * @param  PostToCategory $postToCategories
+     * @return Category
+     */
+    public function addPostToCategory(PostToCategory $postToCategories) {
+        $this->postToCategories[] = $postToCategories;
+
+        return $this;
+    }
+
+    /**
+     * Remove postToCategories
+     *
+     * @param PostToCategory $postToCategories
+     */
+    public function removePostToCategory(PostToCategory $postToCategories) {
+        $this->postToCategories->removeElement($postToCategories);
+    }
+
 }

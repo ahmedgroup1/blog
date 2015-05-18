@@ -45,8 +45,15 @@ class PostController extends Controller
     public function createAction(Request $request)
     {
         $entity = new Post();
+        
+        //add date automatially on creation
+        $entity->setDateCreated(new \DateTime());
+        $entity->setDateUpdated(new \DateTime());
+        //
+                
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
+        
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -185,7 +192,10 @@ class PostController extends Controller
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Post entity.');
         }
-
+        
+        //update dateUpdated automatially
+        $entity->setDateUpdated(new \DateTime());
+        
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createEditForm($entity);
         $editForm->handleRequest($request);
