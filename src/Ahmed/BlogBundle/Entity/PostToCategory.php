@@ -12,14 +12,19 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class PostToCategory
 {
+     /**
+    * @ORM\Id
+    * @ORM\ManyToOne(targetEntity="post", inversedBy="postToCategories")
+    * @ORM\JoinColumn(name="post_id", referencedColumnName="id")
+    */
+    private $post;
+
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="postToCategories")
+     * @ORM\JoinColumn(name="category_id", referencedColumnName="id")
      */
-    private $id;
+    private $category;
 
     /**
      * @var integer

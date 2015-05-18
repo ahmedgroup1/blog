@@ -12,6 +12,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Post
 {
+     /**
+     * @ORM\OneToMany(targetEntity="PostToCategory", mappedBy="course")
+     * @ORM\OrderBy({"ordering" = "ASC"})
+     */
+    private $postToCategories;
+    
     /**
      * @var integer
      *

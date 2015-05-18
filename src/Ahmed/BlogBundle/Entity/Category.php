@@ -12,6 +12,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Category
 {
+     /**
+     * @ORM\OneToMany(targetEntity="PostToCategory", mappedBy="category")
+     */
+    private $postToCategories;
+
+    
     /**
      * @var integer
      *
