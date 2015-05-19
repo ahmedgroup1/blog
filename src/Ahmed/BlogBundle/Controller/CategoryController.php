@@ -115,12 +115,18 @@ class CategoryController extends Controller
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Category entity.');
         }
+        
+        //foreach ($entity->getPosts() as $post)
+        //{ 
+        //    print_r($post->getTitle());
+        //}
 
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
             'entity'      => $entity,
             'delete_form' => $deleteForm->createView(),
+            'posts' => $entity->getPosts(),
         );
     }
 
