@@ -14,9 +14,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Category {
 
     /**
-     * @ORM\OneToMany(targetEntity="PostToCategory", mappedBy="category")
-     */
-    private $postToCategories;
+     * @ORM\ManyToMany(targetEntity="Post", mappedBy="categories")
+     * */
+    private $posts;
 
     /**
      * @var integer
@@ -64,39 +64,27 @@ class Category {
         return $this->name;
     }
 
-  
-
-    public function __construct() {
-        $this->postToCategories = new ArrayCollection();
-    }
-
-    public function getPostToCategories() {
-        return $this->postToCategories;
-    }
-
-    public function addPostToCategories($postToCategories) {
-        $this->postToCategories[] = $postToCategories;
+    /**
+     * Add posts
+     *
+     * @param \Ahmed\BlogBundle\Entity\Post $posts
+     */
+    public function addposts(\Ahmed\BlogBundle\Entity\Post $posts) {
+        $item->addCategory($this);
+        $this->posts[] = $posts;
     }
 
     /**
-     * Add postToCategories
+     * Get posts
      *
-     * @param  PostToCategory $postToCategories
-     * @return Category
+     * @return Doctrine\Common\Collections\Collection 
      */
-    public function addPostToCategory(PostToCategory $postToCategories) {
-        $this->postToCategories[] = $postToCategories;
-
-        return $this;
+    public function getposts() {
+        return $this->posts;
     }
-
-    /**
-     * Remove postToCategories
-     *
-     * @param PostToCategory $postToCategories
-     */
-    public function removePostToCategory(PostToCategory $postToCategories) {
-        $this->postToCategories->removeElement($postToCategories);
+    
+        public function __construct() {
+        $this->posts = new ArrayCollection();
     }
 
 }

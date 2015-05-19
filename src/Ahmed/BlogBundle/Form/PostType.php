@@ -18,15 +18,13 @@ class PostType extends AbstractType {
                 ->add('content', 'textarea', array('max_length' => 255))
                 //->add('dateCreated','datetime', array('data' => new \DateTime()))
                 //->add('dateUpdated')
-                //->add('author')
+                ->add('author')
         ;
-        $builder->add('author', 'entity', array(
-            'class' => 'AhmedBlogBundle:User',
-            'property' => 'username',
-        ));
-        $builder->add('postToCategories', 'entity', array(
+  
+        $builder->add('categories', 'entity', array(
             'class' => 'AhmedBlogBundle:Category',
             'property' => 'name',
+            'multiple' => true
         ));
         
     }

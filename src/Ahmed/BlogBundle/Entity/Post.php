@@ -14,10 +14,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Post {
 
     /**
-     * @ORM\OneToMany(targetEntity="PostToCategory", mappedBy="post")
-     * @ORM\OrderBy({"ordering" = "ASC"})
-     */
-    private $postToCategories;
+     * @ORM\ManyToMany(targetEntity="Category", inversedBy="posts")
+     * @ORM\JoinTable(name="post_category")
+     * */
     private $categories;
 
     /**
@@ -178,64 +177,21 @@ class Post {
         return $this->author;
     }
 
-    /**
-     * Constructor
-     */
+    
+
+    public function getCategories() {
+        return $this->categories;
+    }
+
+   public function setCategories(\Ahmed\BlogBundle\Entity\Category $categories) {
+        $this->categories[] = $categories;
+    }
     public function __construct() {
-        $this->postToCategories = new ArrayCollection();
         $this->categories = new ArrayCollection();
     }
 
-    /**
-     * Get courceToCategoies
-     *
-     * @return List<PostToCategory>
-     */
-    public function getPostToCategories() {
-        return $this->postToCategories;
-    }
+   
 
-    /**
-     * Add postToCategories
-     *
-     * @param PostToCategory
-     */
-    public function addPostToCategories(PostToCategory $postToCategories) {
-        $postToCategories->setPost($this);
-        $this->postToCategories[] = $postToCategories;
-    }
-
-    /**
-     * Add postToCategories
-     *
-     * @param PostToCategory
-     */
     
-    public function setPostToCategories(\Ahmed\BlogBundle\Entity\PostToCategory $postToCategories) {
-        $postToCategories->setPost($this);
-        $this->postToCategories[] = $postToCategories;
-        return $this;
-    }
-
-    /**
-     * Add postToCategories
-     *
-     * @param  \TA\CurriculumBundle\Entity\PostToCategory $postToCategories
-     * @return Post
-     */
-    public function addPostToCategory(PostToCategory $postToCategories) {
-        $this->postToCategories[] = $postToCategories;
-
-        return $this;
-    }
-
-    /**
-     * Remove postToCategories
-     *
-     * @param \TA\CurriculumBundle\Entity\PostToCategory $postToCategories
-     */
-    public function removePostToCategory(PostToCategory $postToCategories) {
-        $this->postToCategories->removeElement($postToCategories);
-    }
 
 }
