@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Ahmed\BlogBundle\Entity\Category;
 use Ahmed\BlogBundle\Form\CategoryType;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Category controller.
@@ -44,6 +45,8 @@ class CategoryController extends Controller
      */
     public function createAction(Request $request)
     {
+        if (TRUE === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
+
         $entity = new Category();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
@@ -60,6 +63,9 @@ class CategoryController extends Controller
             'entity' => $entity,
             'form'   => $form->createView(),
         );
+         } else {
+            throw new AccessDeniedException();
+        }
     }
 
     /**
@@ -71,6 +77,8 @@ class CategoryController extends Controller
      */
     private function createCreateForm(Category $entity)
     {
+        if (TRUE === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
+ 
         $form = $this->createForm(new CategoryType(), $entity, array(
             'action' => $this->generateUrl('category_create'),
             'method' => 'POST',
@@ -79,6 +87,9 @@ class CategoryController extends Controller
         $form->add('submit', 'submit', array('label' => 'Create'));
 
         return $form;
+        } else {
+            throw new AccessDeniedException();
+        }
     }
 
     /**
@@ -90,6 +101,8 @@ class CategoryController extends Controller
      */
     public function newAction()
     {
+        if (TRUE === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
+ 
         $entity = new Category();
         $form   = $this->createCreateForm($entity);
 
@@ -97,6 +110,9 @@ class CategoryController extends Controller
             'entity' => $entity,
             'form'   => $form->createView(),
         );
+        } else {
+            throw new AccessDeniedException();
+        }
     }
 
     /**
@@ -139,6 +155,8 @@ class CategoryController extends Controller
      */
     public function editAction($id)
     {
+        if (TRUE === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
+ 
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('AhmedBlogBundle:Category')->find($id);
@@ -155,6 +173,9 @@ class CategoryController extends Controller
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
+        } else {
+            throw new AccessDeniedException();
+        }
     }
 
     /**
@@ -166,6 +187,8 @@ class CategoryController extends Controller
     */
     private function createEditForm(Category $entity)
     {
+        if (TRUE === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
+ 
         $form = $this->createForm(new CategoryType(), $entity, array(
             'action' => $this->generateUrl('category_update', array('id' => $entity->getId())),
             'method' => 'PUT',
@@ -174,6 +197,9 @@ class CategoryController extends Controller
         $form->add('submit', 'submit', array('label' => 'Update'));
 
         return $form;
+        } else {
+            throw new AccessDeniedException();
+        }
     }
     /**
      * Edits an existing Category entity.
@@ -184,6 +210,8 @@ class CategoryController extends Controller
      */
     public function updateAction(Request $request, $id)
     {
+        if (TRUE === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
+ 
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('AhmedBlogBundle:Category')->find($id);
@@ -207,6 +235,9 @@ class CategoryController extends Controller
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
+        } else {
+            throw new AccessDeniedException();
+        }
     }
     /**
      * Deletes a Category entity.
@@ -216,6 +247,8 @@ class CategoryController extends Controller
      */
     public function deleteAction(Request $request, $id)
     {
+        if (TRUE === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
+ 
         $form = $this->createDeleteForm($id);
         $form->handleRequest($request);
 
@@ -232,6 +265,9 @@ class CategoryController extends Controller
         }
 
         return $this->redirect($this->generateUrl('category'));
+        } else {
+            throw new AccessDeniedException();
+        }
     }
 
     /**

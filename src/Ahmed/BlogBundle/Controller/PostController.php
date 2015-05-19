@@ -9,14 +9,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Ahmed\BlogBundle\Entity\Post;
 use Ahmed\BlogBundle\Form\PostType;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Post controller.
  *
  * @Route("/post")
  */
-class PostController extends Controller
-{
+class PostController extends Controller {
 
     /**
      * Lists all Post entities.
@@ -25,8 +25,7 @@ class PostController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function indexAction()
-    {
+    public function indexAction() {
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('AhmedBlogBundle:Post')->findAll();
@@ -35,6 +34,7 @@ class PostController extends Controller
             'entities' => $entities,
         );
     }
+
     /**
      * Creates a new Post entity.
      *
@@ -42,18 +42,17 @@ class PostController extends Controller
      * @Method("POST")
      * @Template("AhmedBlogBundle:Post:new.html.twig")
      */
-    public function createAction(Request $request)
-    {
+    public function createAction(Request $request) {
         $entity = new Post();
-        
-        //add date automatially on creation
+
+    //add date automatially on creation
         $entity->setDateCreated(new \DateTime());
         $entity->setDateUpdated(new \DateTime());
-        //
-                
+
+
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
-        
+
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -65,7 +64,7 @@ class PostController extends Controller
 
         return array(
             'entity' => $entity,
-            'form'   => $form->createView(),
+            'form' => $form->createView(),
         );
     }
 
@@ -76,16 +75,20 @@ class PostController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createCreateForm(Post $entity)
-    {
-        $form = $this->createForm(new PostType(), $entity, array(
-            'action' => $this->generateUrl('post_create'),
-            'method' => 'POST',
-        ));
+    private function createCreateForm(Post $entity) {
+        if (TRUE === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
 
-        $form->add('submit', 'submit', array('label' => 'Create'));
+            $form = $this->createForm(new PostType(), $entity, array(
+                'action' => $this->generateUrl('post_create'),
+                'method' => 'POST',
+            ));
 
-        return $form;
+            $form->add('submit', 'submit', array('label' => 'Create'));
+
+            return $form;
+        } else {
+            throw new AccessDeniedException();
+        }
     }
 
     /**
@@ -95,15 +98,19 @@ class PostController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function newAction()
-    {
-        $entity = new Post();
-        $form   = $this->createCreateForm($entity);
+    public function newAction() {
+        if (TRUE === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
 
-        return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        );
+            $entity = new Post();
+            $form = $this->createCreateForm($entity);
+
+            return array(
+                'entity' => $entity,
+                'form' => $form->createView(),
+            );
+        } else {
+            throw new AccessDeniedException();
+        }
     }
 
     /**
@@ -113,8 +120,7 @@ class PostController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function showAction($id)
-    {
+    public function showAction($id) {
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('AhmedBlogBundle:Post')->find($id);
@@ -126,7 +132,7 @@ class PostController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
-            'entity'      => $entity,
+            'entity' => $entity,
             'delete_form' => $deleteForm->createView(),
         );
     }
@@ -138,44 +144,52 @@ class PostController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function editAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
+    public function editAction($id) {
+        if (TRUE === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AhmedBlogBundle:Post')->find($id);
+            $entity = $em->getRepository('AhmedBlogBundle:Post')->find($id);
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Post entity.');
+            if (!$entity) {
+                throw $this->createNotFoundException('Unable to find Post entity.');
+            }
+
+            $editForm = $this->createEditForm($entity);
+            $deleteForm = $this->createDeleteForm($id);
+
+            return array(
+                'entity' => $entity,
+                'edit_form' => $editForm->createView(),
+                'delete_form' => $deleteForm->createView(),
+            );
+        } else {
+            throw new AccessDeniedException();
         }
-
-        $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
-
-        return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        );
     }
 
     /**
-    * Creates a form to edit a Post entity.
-    *
-    * @param Post $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
-    private function createEditForm(Post $entity)
-    {
-        $form = $this->createForm(new PostType(), $entity, array(
-            'action' => $this->generateUrl('post_update', array('id' => $entity->getId())),
-            'method' => 'PUT',
-        ));
+     * Creates a form to edit a Post entity.
+     *
+     * @param Post $entity The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createEditForm(Post $entity) {
+        if (TRUE === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
 
-        $form->add('submit', 'submit', array('label' => 'Update'));
+            $form = $this->createForm(new PostType(), $entity, array(
+                'action' => $this->generateUrl('post_update', array('id' => $entity->getId())),
+                'method' => 'PUT',
+            ));
 
-        return $form;
+            $form->add('submit', 'submit', array('label' => 'Update'));
+
+            return $form;
+        } else {
+            throw new AccessDeniedException();
+        }
     }
+
     /**
      * Edits an existing Post entity.
      *
@@ -183,59 +197,67 @@ class PostController extends Controller
      * @Method("PUT")
      * @Template("AhmedBlogBundle:Post:edit.html.twig")
      */
-    public function updateAction(Request $request, $id)
-    {
-        $em = $this->getDoctrine()->getManager();
+    public function updateAction(Request $request, $id) {
+        if (TRUE === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
 
-        $entity = $em->getRepository('AhmedBlogBundle:Post')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Post entity.');
-        }
-        
-        //update dateUpdated automatially
-        $entity->setDateUpdated(new \DateTime());
-        
-        $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createEditForm($entity);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isValid()) {
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('post_edit', array('id' => $id)));
-        }
-
-        return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        );
-    }
-    /**
-     * Deletes a Post entity.
-     *
-     * @Route("/{id}", name="post_delete")
-     * @Method("DELETE")
-     */
-    public function deleteAction(Request $request, $id)
-    {
-        $form = $this->createDeleteForm($id);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+
             $entity = $em->getRepository('AhmedBlogBundle:Post')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Post entity.');
             }
 
-            $em->remove($entity);
-            $em->flush();
-        }
+            //update dateUpdated automatially
+            $entity->setDateUpdated(new \DateTime());
 
-        return $this->redirect($this->generateUrl('post'));
+            $deleteForm = $this->createDeleteForm($id);
+            $editForm = $this->createEditForm($entity);
+            $editForm->handleRequest($request);
+
+            if ($editForm->isValid()) {
+                $em->flush();
+
+                return $this->redirect($this->generateUrl('post_edit', array('id' => $id)));
+            }
+
+            return array(
+                'entity' => $entity,
+                'edit_form' => $editForm->createView(),
+                'delete_form' => $deleteForm->createView(),
+            );
+        } else {
+            throw new AccessDeniedException();
+        }
+    }
+
+    /**
+     * Deletes a Post entity.
+     *
+     * @Route("/{id}", name="post_delete")
+     * @Method("DELETE")
+     */
+    public function deleteAction(Request $request, $id) {
+        if (TRUE === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            $form = $this->createDeleteForm($id);
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $entity = $em->getRepository('AhmedBlogBundle:Post')->find($id);
+
+                if (!$entity) {
+                    throw $this->createNotFoundException('Unable to find Post entity.');
+                }
+
+                $em->remove($entity);
+                $em->flush();
+            }
+
+            return $this->redirect($this->generateUrl('post'));
+        } else {
+            throw new AccessDeniedException();
+        }
     }
 
     /**
@@ -245,13 +267,15 @@ class PostController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createDeleteForm($id)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('post_delete', array('id' => $id)))
-            ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
-            ->getForm()
-        ;
+    private function createDeleteForm($id) {
+    
+            return $this->createFormBuilder()
+                            ->setAction($this->generateUrl('post_delete', array('id' => $id)))
+                            ->setMethod('DELETE')
+                            ->add('submit', 'submit', array('label' => 'Delete'))
+                            ->getForm()
+            ;
+       
     }
+
 }
