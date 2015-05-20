@@ -62,6 +62,8 @@ class Post {
      * @ORM\Column(name="author", type="integer")
      */
     private $author;
+    
+   
 
     /**
      * Get id
@@ -177,7 +179,7 @@ class Post {
         return $this->author;
     }
 
-    
+   
 
     public function getCategories() {
         return $this->categories;
