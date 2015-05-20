@@ -1,15 +1,8 @@
-{% extends '::base.html.twig' %}
+{% extends 'AhmedBlogBundle::layout.html.twig' %}
 
 {% block body -%}
-    <h1>Contact Author</h1>
-{{ user.email }}
+    <h1>Contact {{ user.username }}</h1>
+
     {{ form(form) }}
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('contact') }}">
-            Back to the list
-        </a>
-    </li>
-</ul>
 {% endblock %}

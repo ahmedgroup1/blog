@@ -14,6 +14,17 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        return array('name' => 'ddd');
+       
+        $em = $this->getDoctrine()->getManager();
+
+        $postEntities = $em->getRepository('AhmedBlogBundle:Post')->findAll();
+        $categoryEntities = $em->getRepository('AhmedBlogBundle:Category')->findAll();
+
+        return array(
+            'postEntities' => $postEntities,
+            'categoryEntities' => $categoryEntities 
+        );
+        
+        
     }
 }

@@ -1,70 +1,13 @@
-{% extends '::base.html.twig' %}
+{% extends 'AhmedBlogBundle::layout.html.twig' %}
 
 {% block body -%}
-    <h1>Category</h1>
-
-    <table class="record_properties">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ entity.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ entity.name }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <h2>Posts in that category</h2>
-    <table class="records_list">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Content</th>
-                <th>Datecreated</th>
-                <th>Dateupdated</th>
-                <th>Author</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
+    <h1>{{ entity.name }} posts</h1>
+    <ul>
         {% for post in posts %}
-            <tr>
-                <td><a href="{{ path('post_show', { 'id': post.id }) }}">{{ post.id }}</a></td>
-                <td>{{ post.title }}</td>
-                <td>{{ post.content }}</td>
-                <td>{% if post.dateCreated %}{{ post.dateCreated|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{% if post.dateUpdated %}{{ post.dateUpdated|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{{ post.author }}</td>
-                <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('post_show', { 'id': post.id }) }}">show</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('post_edit', { 'id': post.id }) }}">edit</a>
-                    </li>
-                </ul>
-                </td>
-            </tr>
+            <li>
+                <a href="{{ path('post_show', { 'id': post.id }) }}">{{ post.title }}</a> by {{ post.author }} on {% if post.dateCreated %}{{ post.dateCreated|date('Y-m-d H:i:s') }}{% endif %} [<a href="{{ path('post_edit', { 'id': post.id }) }}">edit</a>]
+            </li>        
         {% endfor %}
-        </tbody>
-    </table>
-
-
-    <ul class="record_actions">
-        <li>
-            <a href="{{ path('category') }}">
-                Back to the list
-            </a>
-        </li>
-        <li>
-            <a href="{{ path('category_edit', { 'id': entity.id }) }}">
-                Edit
-            </a>
-        </li>
-        <li>{{ form(delete_form) }}</li>
     </ul>
+       
 {% endblock %}

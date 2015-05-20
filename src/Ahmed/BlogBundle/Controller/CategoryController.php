@@ -16,8 +16,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  *
  * @Route("/category")
  */
-class CategoryController extends Controller
-{
+class CategoryController extends Controller {
 
     /**
      * Lists all Category entities.
@@ -26,8 +25,7 @@ class CategoryController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function indexAction()
-    {
+    public function indexAction() {
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('AhmedBlogBundle:Category')->findAll();
@@ -36,6 +34,7 @@ class CategoryController extends Controller
             'entities' => $entities,
         );
     }
+
     /**
      * Creates a new Category entity.
      *
@@ -43,27 +42,26 @@ class CategoryController extends Controller
      * @Method("POST")
      * @Template("AhmedBlogBundle:Category:new.html.twig")
      */
-    public function createAction(Request $request)
-    {
+    public function createAction(Request $request) {
         if (TRUE === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
 
-        $entity = new Category();
-        $form = $this->createCreateForm($entity);
-        $form->handleRequest($request);
+            $entity = new Category();
+            $form = $this->createCreateForm($entity);
+            $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($entity);
+                $em->flush();
 
-            return $this->redirect($this->generateUrl('category_show', array('id' => $entity->getId())));
-        }
+                return $this->redirect($this->generateUrl('category_show', array('id' => $entity->getId())));
+            }
 
-        return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        );
-         } else {
+            return array(
+                'entity' => $entity,
+                'form' => $form->createView(),
+            );
+        } else {
             throw new AccessDeniedException();
         }
     }
@@ -75,18 +73,17 @@ class CategoryController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createCreateForm(Category $entity)
-    {
+    private function createCreateForm(Category $entity) {
         if (TRUE === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
- 
-        $form = $this->createForm(new CategoryType(), $entity, array(
-            'action' => $this->generateUrl('category_create'),
-            'method' => 'POST',
-        ));
 
-        $form->add('submit', 'submit', array('label' => 'Create'));
+            $form = $this->createForm(new CategoryType(), $entity, array(
+                'action' => $this->generateUrl('category_create'),
+                'method' => 'POST',
+            ));
 
-        return $form;
+            $form->add('submit', 'submit', array('label' => 'Create'));
+
+            return $form;
         } else {
             throw new AccessDeniedException();
         }
@@ -99,17 +96,16 @@ class CategoryController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function newAction()
-    {
+    public function newAction() {
         if (TRUE === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
- 
-        $entity = new Category();
-        $form   = $this->createCreateForm($entity);
 
-        return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        );
+            $entity = new Category();
+            $form = $this->createCreateForm($entity);
+          
+            return array(
+                'entity' => $entity,
+                'form' => $form->createView(),
+            );
         } else {
             throw new AccessDeniedException();
         }
@@ -122,8 +118,7 @@ class CategoryController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function showAction($id)
-    {
+    public function showAction($id) {
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('AhmedBlogBundle:Category')->find($id);
@@ -131,16 +126,16 @@ class CategoryController extends Controller
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Category entity.');
         }
-        
-        //foreach ($entity->getPosts() as $post)
-        //{ 
-        //    print_r($post->getTitle());
-        //}
 
+        $postEntities = $em->getRepository('AhmedBlogBundle:Post')->findAll();
+        $categoryEntities = $em->getRepository('AhmedBlogBundle:Category')->findAll();
+        
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
-            'entity'      => $entity,
+            'entity' => $entity,
+            'postEntities' => $postEntities,
+            'categoryEntities' => $categoryEntities,
             'delete_form' => $deleteForm->createView(),
             'posts' => $entity->getPosts(),
         );
@@ -153,54 +148,58 @@ class CategoryController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function editAction($id)
-    {
+    public function editAction($id) {
         if (TRUE === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
- 
-        $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AhmedBlogBundle:Category')->find($id);
+            $em = $this->getDoctrine()->getManager();
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Category entity.');
-        }
+            $entity = $em->getRepository('AhmedBlogBundle:Category')->find($id);
 
-        $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
+            if (!$entity) {
+                throw $this->createNotFoundException('Unable to find Category entity.');
+            }
 
-        return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        );
+            $editForm = $this->createEditForm($entity);
+            $deleteForm = $this->createDeleteForm($id);
+
+            $postEntities = $em->getRepository('AhmedBlogBundle:Post')->findAll();
+            $categoryEntities = $em->getRepository('AhmedBlogBundle:Category')->findAll();
+
+            return array(
+                'entity' => $entity,
+                'edit_form' => $editForm->createView(),
+                'delete_form' => $deleteForm->createView(),
+                'postEntities' => $postEntities,
+                'categoryEntities' => $categoryEntities,
+            );
         } else {
             throw new AccessDeniedException();
         }
     }
 
     /**
-    * Creates a form to edit a Category entity.
-    *
-    * @param Category $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
-    private function createEditForm(Category $entity)
-    {
+     * Creates a form to edit a Category entity.
+     *
+     * @param Category $entity The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createEditForm(Category $entity) {
         if (TRUE === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
- 
-        $form = $this->createForm(new CategoryType(), $entity, array(
-            'action' => $this->generateUrl('category_update', array('id' => $entity->getId())),
-            'method' => 'PUT',
-        ));
 
-        $form->add('submit', 'submit', array('label' => 'Update'));
+            $form = $this->createForm(new CategoryType(), $entity, array(
+                'action' => $this->generateUrl('category_update', array('id' => $entity->getId())),
+                'method' => 'PUT',
+            ));
 
-        return $form;
+            $form->add('submit', 'submit', array('label' => 'Update'));
+
+            return $form;
         } else {
             throw new AccessDeniedException();
         }
     }
+
     /**
      * Edits an existing Category entity.
      *
@@ -208,63 +207,62 @@ class CategoryController extends Controller
      * @Method("PUT")
      * @Template("AhmedBlogBundle:Category:edit.html.twig")
      */
-    public function updateAction(Request $request, $id)
-    {
+    public function updateAction(Request $request, $id) {
         if (TRUE === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
- 
-        $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AhmedBlogBundle:Category')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Category entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createEditForm($entity);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isValid()) {
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('category_edit', array('id' => $id)));
-        }
-
-        return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        );
-        } else {
-            throw new AccessDeniedException();
-        }
-    }
-    /**
-     * Deletes a Category entity.
-     *
-     * @Route("/{id}", name="category_delete")
-     * @Method("DELETE")
-     */
-    public function deleteAction(Request $request, $id)
-    {
-        if (TRUE === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
- 
-        $form = $this->createDeleteForm($id);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+
             $entity = $em->getRepository('AhmedBlogBundle:Category')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Category entity.');
             }
 
-            $em->remove($entity);
-            $em->flush();
-        }
+            $deleteForm = $this->createDeleteForm($id);
+            $editForm = $this->createEditForm($entity);
+            $editForm->handleRequest($request);
 
-        return $this->redirect($this->generateUrl('category'));
+            if ($editForm->isValid()) {
+                $em->flush();
+
+                return $this->redirect($this->generateUrl('category_edit', array('id' => $id)));
+            }
+
+            return array(
+                'entity' => $entity,
+                'edit_form' => $editForm->createView(),
+                'delete_form' => $deleteForm->createView(),
+            );
+        } else {
+            throw new AccessDeniedException();
+        }
+    }
+
+    /**
+     * Deletes a Category entity.
+     *
+     * @Route("/{id}", name="category_delete")
+     * @Method("DELETE")
+     */
+    public function deleteAction(Request $request, $id) {
+        if (TRUE === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
+
+            $form = $this->createDeleteForm($id);
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $entity = $em->getRepository('AhmedBlogBundle:Category')->find($id);
+
+                if (!$entity) {
+                    throw $this->createNotFoundException('Unable to find Category entity.');
+                }
+
+                $em->remove($entity);
+                $em->flush();
+            }
+
+            return $this->redirect($this->generateUrl('category'));
         } else {
             throw new AccessDeniedException();
         }
@@ -277,13 +275,13 @@ class CategoryController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createDeleteForm($id)
-    {
+    private function createDeleteForm($id) {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('category_delete', array('id' => $id)))
-            ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
-            ->getForm()
+                        ->setAction($this->generateUrl('category_delete', array('id' => $id)))
+                        ->setMethod('DELETE')
+                        ->add('submit', 'submit', array('label' => 'Delete'))
+                        ->getForm()
         ;
     }
+
 }

@@ -1,0 +1,23 @@
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Ahmed Ibrahim Blog</title>
+    </head>
+    <body>
+        <div id="header">
+        {% include('AhmedBlogBundle::header.html.twig') %}
+        </div>
+
+        <div id="wrapper">
+        {% block body %}{% endblock %}
+        </div>
+        
+        <div id="sidebar">
+        {% include('AhmedBlogBundle::sidebar.html.twig') %}
+        </div>
+
+        
+
+       
+    </body>
+</html>

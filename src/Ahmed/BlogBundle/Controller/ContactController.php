@@ -114,9 +114,15 @@ class ContactController extends Controller {
         $entity = new Contact();
         $form = $this->createCreateForm($entity);
 
+        $em = $this->getDoctrine()->getManager();
+        $postEntities = $em->getRepository('AhmedBlogBundle:Post')->findAll();
+        $categoryEntities = $em->getRepository('AhmedBlogBundle:Category')->findAll();
+
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
+            'postEntities' => $postEntities,
+            'categoryEntities' => $categoryEntities,
         );
     }
 
@@ -303,6 +309,12 @@ class ContactController extends Controller {
 
         $entity = new Contact();
 
+
+        $postEntities = $em->getRepository('AhmedBlogBundle:Post')->findAll();
+        $categoryEntities = $em->getRepository('AhmedBlogBundle:Category')->findAll();
+
+
+
         $form = $this->createForm(new ContactType(), $entity, array(
             'action' => $this->generateUrl('contact_create', array('authorId' => $authorId)),
             'method' => 'POST',
@@ -315,6 +327,8 @@ class ContactController extends Controller {
             'entity' => $entity,
             'form' => $form->createView(),
             'user' => $userEntity,
+            'postEntities' => $postEntities,
+            'categoryEntities' => $categoryEntities,
         );
     }
 

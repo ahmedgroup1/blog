@@ -45,7 +45,7 @@ class PostController extends Controller {
     public function createAction(Request $request) {
         $entity = new Post();
 
-    //add date automatially on creation
+        //add date automatially on creation
         $entity->setDateCreated(new \DateTime());
         $entity->setDateUpdated(new \DateTime());
 
@@ -130,9 +130,14 @@ class PostController extends Controller {
         }
 
         $deleteForm = $this->createDeleteForm($id);
+        $postEntities = $em->getRepository('AhmedBlogBundle:Post')->findAll();
+        $categoryEntities = $em->getRepository('AhmedBlogBundle:Category')->findAll();
+
 
         return array(
             'entity' => $entity,
+            'postEntities' => $postEntities,
+            'categoryEntities' => $categoryEntities,
             'delete_form' => $deleteForm->createView(),
         );
     }
@@ -157,10 +162,15 @@ class PostController extends Controller {
             $editForm = $this->createEditForm($entity);
             $deleteForm = $this->createDeleteForm($id);
 
+            $postEntities = $em->getRepository('AhmedBlogBundle:Post')->findAll();
+            $categoryEntities = $em->getRepository('AhmedBlogBundle:Category')->findAll();
+
             return array(
                 'entity' => $entity,
                 'edit_form' => $editForm->createView(),
                 'delete_form' => $deleteForm->createView(),
+                'postEntities' => $postEntities,
+                'categoryEntities' => $categoryEntities,
             );
         } else {
             throw new AccessDeniedException();
@@ -215,6 +225,8 @@ class PostController extends Controller {
             $editForm = $this->createEditForm($entity);
             $editForm->handleRequest($request);
 
+
+
             if ($editForm->isValid()) {
                 $em->flush();
 
@@ -268,14 +280,13 @@ class PostController extends Controller {
      * @return \Symfony\Component\Form\Form The form
      */
     private function createDeleteForm($id) {
-    
-            return $this->createFormBuilder()
-                            ->setAction($this->generateUrl('post_delete', array('id' => $id)))
-                            ->setMethod('DELETE')
-                            ->add('submit', 'submit', array('label' => 'Delete'))
-                            ->getForm()
-            ;
-       
+
+        return $this->createFormBuilder()
+                        ->setAction($this->generateUrl('post_delete', array('id' => $id)))
+                        ->setMethod('DELETE')
+                        ->add('submit', 'submit', array('label' => 'Delete'))
+                        ->getForm()
+        ;
     }
 
 }

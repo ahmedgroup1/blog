@@ -1,0 +1,21 @@
+<h1>Blog Categories</h1>
+<ul>
+    {% for categoryEntity in categoryEntities %}
+        <li>
+            <a href="{{ path('category_show', { 'id': categoryEntity.id }) }}">{{ categoryEntity.name }}</a>  [<a href="{{ path('category_edit', { 'id': categoryEntity.id }) }}">edit</a>]            
+        </li>         
+    {% endfor %}
+</ul>
+
+{% if is_granted('ROLE_ADMIN') %} 
+    <h1>Admin Panel</h1>
+
+    <ul>
+        <li>
+            <a href="{{ path('post_new') }}">Create post</a>
+        </li>  
+        <li>
+            <a href="{{ path('category_new') }}">Create category</a>
+        </li>
+    </ul>
+{% endif %}
