@@ -14,7 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class UserController extends Controller {
 
     /**
-     * Lists all Contact entities.
+     * Login
      *
      * @Route("/login", name="site_login")
      * @Template()
@@ -28,7 +28,21 @@ class UserController extends Controller {
             'categoryEntities' => $categoryEntities,
         );
     }
-    
-   
+
+    /**
+     * Register
+     *
+     * @Route("/register", name="site_register")
+     * @Template()
+     */
+    public function registerAction() {
+        $em = $this->getDoctrine()->getManager();
+        $postEntities = $em->getRepository('AhmedBlogBundle:Post')->findAll();
+        $categoryEntities = $em->getRepository('AhmedBlogBundle:Category')->findAll();
+        return array(
+            'postEntities' => $postEntities,
+            'categoryEntities' => $categoryEntities,
+        );
+    }
 
 }
