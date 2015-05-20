@@ -1,21 +1,34 @@
-<h1>Blog Categories</h1>
-<ul>
-    {% for categoryEntity in categoryEntities %}
-        <li>
-            <a href="{{ path('category_show', { 'id': categoryEntity.id }) }}">{{ categoryEntity.name }}</a>  [<a href="{{ path('category_edit', { 'id': categoryEntity.id }) }}">edit</a>]            
-        </li>         
-    {% endfor %}
-</ul>
+<div class="col-sm-4">
+    <h3>Blog Categories</h3>
+    <ul class="list-group">
+        {% for categoryEntity in categoryEntities %}
+            <li class="list-group-item">
+                <a href="{{ path('category_show', { 'id': categoryEntity.id }) }}">{{ categoryEntity.name }}</a>   {% if is_granted('ROLE_ADMIN') %} [<a href="{{ path('category_edit', { 'id': categoryEntity.id }) }}">edit</a>]{% endif %}            
+            </li>         
+        {% endfor %}
+    </ul>   
 
-{% if is_granted('ROLE_ADMIN') %} 
-    <h1>Admin Panel</h1>
+    {% if is_granted('ROLE_ADMIN') %} 
+        <h3>Admin Panel</h3>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <a href="{{ path('post_new') }}">Create post</a>
+            </li>  
+            <li class="list-group-item">
+                <a href="{{ path('category_new') }}">Create category</a>
+            </li>
+        </ul>
+    {% endif %}
+    <h3>
+        <a class="btn btn-primary btn-lg" href="{{ path('contact_new') }}">Contact us</a>
+        {% if not app.user %}
+            {% render url('fos_user_security_login') %}
+            {% render url('fos_user_registration_register') %}
+        {% endif %}
+    </h3>
+</div>  
 
-    <ul>
-        <li>
-            <a href="{{ path('post_new') }}">Create post</a>
-        </li>  
-        <li>
-            <a href="{{ path('category_new') }}">Create category</a>
-        </li>
-    </ul>
-{% endif %}
+
+
+
+

@@ -305,15 +305,11 @@ class ContactController extends Controller {
         //get User Entity
         $em = $this->getDoctrine()->getManager();
         $userEntity = $em->getRepository('AhmedBlogBundle:User')->find($authorId);
-
-
+        
         $entity = new Contact();
-
 
         $postEntities = $em->getRepository('AhmedBlogBundle:Post')->findAll();
         $categoryEntities = $em->getRepository('AhmedBlogBundle:Category')->findAll();
-
-
 
         $form = $this->createForm(new ContactType(), $entity, array(
             'action' => $this->generateUrl('contact_create', array('authorId' => $authorId)),

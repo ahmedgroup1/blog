@@ -1,15 +1,10 @@
-{% extends '::base.html.twig' %}
+{% extends 'AhmedBlogBundle::layout.html.twig' %}
 
-{% block body -%}
+{% block content -%}
+    <div class="col-sm-8">
     <h1>Category creation</h1>
 
     {{ form(form) }}
-
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('category') }}">
-            Back to the list
-        </a>
-    </li>
-</ul>
+    </div>
+       
 {% endblock %}

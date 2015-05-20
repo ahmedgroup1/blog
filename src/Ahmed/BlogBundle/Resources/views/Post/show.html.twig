@@ -1,11 +1,14 @@
 {% extends 'AhmedBlogBundle::layout.html.twig' %}
 
-{% block body -%}
-    <h2>{{ entity.title }}</h2>
-    <hr>
-    Posted on {{ entity.dateCreated|date('Y-m-d H:i:s') }} by {{ entity.author }} {% if is_granted('ROLE_ADMIN') %} [<a href="{{ path('post_edit', { 'id': entity.id }) }}">Edit</a>] {% endif %}
-    <hr>
-    <h4>
-    {{ entity.content }}
-    </h4>
+{% block content -%}
+    <div class="col-sm-8">
+        <h2>{{ entity.title }}</h2>
+        <hr>
+        Posted on {{ entity.dateCreated|date('Y-m-d H:i:s') }} by {{ user.username }} {% if is_granted('ROLE_ADMIN') %} [<a href="{{ path('post_edit', { 'id': entity.id }) }}">Edit</a>] {% endif %}
+        [<a href="{{ path('contact_author', { 'authorId': entity.author }) }}">Contact Author</a>]
+        <hr>
+        
+            {{ entity.content }}
+        
+    </div>
 {% endblock %}

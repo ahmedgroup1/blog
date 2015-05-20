@@ -1,13 +1,18 @@
 {% extends 'AhmedBlogBundle::layout.html.twig' %}
 
-{% block body -%}
-    <h1>{{ entity.name }} posts</h1>
-    <ul>
-        {% for post in posts %}
-            <li>
-                <a href="{{ path('post_show', { 'id': post.id }) }}">{{ post.title }}</a> by {{ post.author }} on {% if post.dateCreated %}{{ post.dateCreated|date('Y-m-d H:i:s') }}{% endif %} [<a href="{{ path('post_edit', { 'id': post.id }) }}">edit</a>]
-            </li>        
-        {% endfor %}
-    </ul>
-       
+{% block content -%}
+    <div class="col-sm-8">
+        <h3>{{ entity.name }} posts</h3>
+        <div class="list-group">
+            {% for post in posts %}
+                <li>
+                    <a href="{{ path('post_show', { 'id': post.id }) }}" class="list-group-item"><h4 class="list-group-item-heading">{{ post.title }}</h4> <p class="list-group-item-text"> on {% if post.dateCreated %}{{ post.dateCreated|date('Y-m-d H:i:s') }}{% endif %}</p></a>
+                </li>        
+            {% endfor %}
+        </div>
+    </div>
+
 {% endblock %}
+
+    
+               

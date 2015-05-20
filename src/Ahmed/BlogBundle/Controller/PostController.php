@@ -48,8 +48,13 @@ class PostController extends Controller {
         //add date automatially on creation
         $entity->setDateCreated(new \DateTime());
         $entity->setDateUpdated(new \DateTime());
-
-
+        
+        
+        $user = $this->get('security.context')->getToken()->getUser();
+        $userId = $user->getId();
+        
+        $entity->setAuthor($userId);
+        
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
@@ -104,9 +109,15 @@ class PostController extends Controller {
             $entity = new Post();
             $form = $this->createCreateForm($entity);
 
+            $em = $this->getDoctrine()->getManager();
+            $postEntities = $em->getRepository('AhmedBlogBundle:Post')->findAll();
+            $categoryEntities = $em->getRepository('AhmedBlogBundle:Category')->findAll();
+
             return array(
                 'entity' => $entity,
                 'form' => $form->createView(),
+                'postEntities' => $postEntities,
+                'categoryEntities' => $categoryEntities,
             );
         } else {
             throw new AccessDeniedException();
@@ -124,6 +135,8 @@ class PostController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('AhmedBlogBundle:Post')->find($id);
+        
+        $userEntity = $em->getRepository('AhmedBlogBundle:User')->find($entity->getAuthor());
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Post entity.');
@@ -139,6 +152,7 @@ class PostController extends Controller {
             'postEntities' => $postEntities,
             'categoryEntities' => $categoryEntities,
             'delete_form' => $deleteForm->createView(),
+            'user' => $userEntity
         );
     }
 

@@ -1,23 +1,25 @@
-<html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>Ahmed Ibrahim Blog</title>
-    </head>
-    <body>
-        <div id="header">
-        {% include('AhmedBlogBundle::header.html.twig') %}
-        </div>
+{% extends '::base.html.twig' %}
 
-        <div id="wrapper">
-        {% block body %}{% endblock %}
-        </div>
-        
-        <div id="sidebar">
-        {% include('AhmedBlogBundle::sidebar.html.twig') %}
-        </div>
+{% block body -%}
 
-        
+    {% include('AhmedBlogBundle::header.html.twig') %}
 
-       
-    </body>
-</html>
+{% block content %}{% endblock %}
+
+{% include('AhmedBlogBundle::sidebar.html.twig') %}
+
+{% include('AhmedBlogBundle::footer.html.twig') %}
+
+{% endblock %}
+
+{% block stylesheets %}
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://designmodo.github.io/Flat-UI/dist/css/flat-ui.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block javascripts %}
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://designmodo.github.io/Flat-UI/dist/js/flat-ui.min.js"></script>
+{% endblock %}
+

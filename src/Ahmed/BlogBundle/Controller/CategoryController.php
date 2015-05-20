@@ -101,10 +101,16 @@ class CategoryController extends Controller {
 
             $entity = new Category();
             $form = $this->createCreateForm($entity);
-          
+
+            $em = $this->getDoctrine()->getManager();
+            $postEntities = $em->getRepository('AhmedBlogBundle:Post')->findAll();
+            $categoryEntities = $em->getRepository('AhmedBlogBundle:Category')->findAll();
+
             return array(
                 'entity' => $entity,
                 'form' => $form->createView(),
+                'postEntities' => $postEntities,
+                'categoryEntities' => $categoryEntities,
             );
         } else {
             throw new AccessDeniedException();
@@ -129,7 +135,7 @@ class CategoryController extends Controller {
 
         $postEntities = $em->getRepository('AhmedBlogBundle:Post')->findAll();
         $categoryEntities = $em->getRepository('AhmedBlogBundle:Category')->findAll();
-        
+
         $deleteForm = $this->createDeleteForm($id);
 
         return array(

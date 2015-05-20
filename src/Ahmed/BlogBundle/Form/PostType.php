@@ -15,10 +15,10 @@ class PostType extends AbstractType {
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
                 ->add('title')
-                ->add('content', 'textarea', array('max_length' => 255))
+                ->add('content', 'textarea', array('max_length' => 1255))
                 //->add('dateCreated','datetime', array('data' => new \DateTime()))
                 //->add('dateUpdated')
-                ->add('author')
+                //->add('author')
         ;
   
         $builder->add('categories', 'entity', array(
