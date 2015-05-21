@@ -7,9 +7,9 @@ parameters:
     database_password: ~
 
     mailer_transport:  smtp
-    mailer_host:       127.0.0.1
-    mailer_user:       ~
-    mailer_password:   ~
+    mailer_host:       smtp.mandrillapp.com
+    mailer_user:       ahmedgroup@unimasr.net
+    mailer_password:   crnFdig6pM0rlrzbuIc8fQ
 
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
